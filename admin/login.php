@@ -4,14 +4,15 @@ require_once("../scripts/functions.php");
  ?>   
 <!DOCTYPE html>
 <html lang="en-US" class="js">
+
 <head>  
     <meta charset="utf-8">
     <meta name="author" content="Softnio">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="<?php echo $description ?>">
-    <link rel="shortcut icon" href="../images/<?php echo $favicon ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="../<?php echo $favicon ?>" type="image/x-icon">
     <!-- Fav Icon  -->
-    <link rel="shortcut icon" href="../images/<?php echo $favicon ?>">
+    <link rel="shortcut icon" href="../<?php echo $favicon ?>">
     <!-- Page Title  -->
     <title>Login |  Welcome to <?php  echo "$sitename";?> Online Banking</title>
     <!-- StyleSheets  -->
@@ -19,6 +20,7 @@ require_once("../scripts/functions.php");
     <link rel="stylesheet" href="../scss/sweetalert.css">
     <link id="skin-default" rel="stylesheet" href="../assets/css/theme.css?ver=2.4.0">
 </head>
+
 <body class="nk-body npc-crypto bg-white pg-auth">
     <!-- app body @s -->
     <div class="nk-app-root">
@@ -30,8 +32,8 @@ require_once("../scripts/functions.php");
                 <div class="nk-block nk-block-middle nk-auth-body">
                     <div class="brand-logo pb-5">
                         <a href="../" class="logo-link">
-                            <img class="logo-light logo-img logo-img-lg" src="../<?php echo$logo?>" srcset="../<?php echo $logo ?>" alt="logo">
-                            <img class="logo-dark logo-img logo-img-lg" src="../<?php echo $logo ?>" srcset="../<?php echo $logo ?>" alt="logo-dark">
+                            <img class="logo-light logo-img logo-img-lg" src="../<?php echo$logo?>" srcset="../images/logo2x.png 2x" alt="logo">
+                            <img class="logo-dark logo-img logo-img-lg" src="../<?php echo $darklogo ?>" srcset="../images/logo-dark2x.png 2x" alt="logo-dark">
                         </a>
                     </div>
                     <?php  echo $stockrate ?>
@@ -40,60 +42,26 @@ require_once("../scripts/functions.php");
                         <div class="nk-block-head-content">
                             <h5 class="nk-block-title">Sign-In</h5>
                             <div class="nk-block-des alert alert-pro alert-primary">
-                                <p class="alert-text">Access the <?php echo $sitename ?> online banking panel using your Email address and password.</p>
+                                <p class="alert-text">Access the <?php echo $sitename ?> online banking panel using your Account ID and passcode.</p>
                             </div>
                         </div>
                     </div><!-- .nk-block-head -->
                     <?php
                     if (isset($_POST['loginForm'])) {
-    $email = filterString($_POST['email']);
-    $password = filterString($_POST['password']);
-    $errorMsg = 0;
-    if (empty($email) || empty($password)) {
-        echo "<div class='alert alert-danger alert-dismissible'>All fields are required!</div>";
-        $errorMsg = 1;
-    }
-   if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    }else{
-       $errorMsg = 1;
-        echo "<div class='alert alert-danger alert-dismissible'>Valid email is required!</div>";
-    }
-
-   
-    if($errorMsg == 0){
-    $pass = md5($password);
-    $conn->set_charset('charset');
-    $query = $conn->query("SELECT * FROM users WHERE email = '$email' AND password = '$pass' AND id = 1");
-    if (mysqli_num_rows($query) < 1) {
-       echo "<div class='alert alert-danger alert-dismissible'>Invalid Email address or passwordd</div>"; 
-       
-    }else{
-         echo "<div class='alert alert-success alert-dismissible'>You have successfully login!</div>";
-         $_SESSION['userAdmin'] = randomString(64);
-         $_SESSION['loggedAdmin'] = 1;
-         $token = $_SESSION['userAdmin'];
-        $ip = $_SERVER["REMOTE_ADDR"];
-        $dated = date("d M y, H:i a");
-        $browser = $_SERVER["HTTP_USER_AGENT"];
-        $queryyy = $conn->query("INSERT INTO login(ip, browser, dated, token, userid) VALUES ('$ip', '$browser', '$dated', '$token', 1)");
-         ?>
-         <meta http-equiv="refresh" content="3; url=account_manager?accessToken=<?php echo $_SESSION['userAdmin']; ?>"> 
-         <?php
-    }
-}
+                        loginUser();
                     }
                     ?>
                     <form action="#" method="post">
                         <div class="form-group">
                             <div class="form-label-group">
-                                <label class="form-label" for="default-01">Email address</label>
+                                <label class="form-label" for="default-01">Account ID</label>
                                 <a class="link link-primary link-sm" tabindex="-1" href="#">Need Help?</a>
                             </div>
-                            <input type="text" class="form-control form-control-lg" autocomplete="off" id="default-01" placeholder="Enter your Email address" name="email">
-                        </div><!-- foem-group -->
+                            <input type="text" class="form-control form-control-lg" autocomplete="off" id="default-01" placeholder="Enter your account ID" name="accountID">
+                        </div><!-- .foem-group -->
                         <div class="form-group">
                             <div class="form-label-group">
-                                <label class="form-label" for="password">Passsword</label>
+                                <label class="form-label" for="password">Passcode</label>
                                 <a class="link link-primary link-sm" tabindex="-1" href="#">Forgot Code?</a>
                             </div>
                             <div class="form-control-wrap">
@@ -101,13 +69,14 @@ require_once("../scripts/functions.php");
                                     <em class="passcode-icon icon-show icon ni ni-eye"></em>
                                     <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
                                 </a>
-                                <input type="password" class="form-control form-control-lg" id="password" placeholder="Enter your password" name="password">
+                                <input type="password" class="form-control form-control-lg" id="password" placeholder="Enter your passcode" name="password">
                             </div>
                         </div><!-- .foem-group -->
                         <div class="form-group">
                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="loginForm">Continue</button>
                         </div>
                     </form><!-- form -->
+                   
                 </div><!-- .nk-block -->
                 <div class="nk-block nk-auth-footer">
                     <div class="nk-block-between">

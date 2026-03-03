@@ -1,10 +1,6 @@
 <?php
-session_start();
-unset($_SESSION['userAdmin']);
-unset($_SESSION['loggedAdmin']);
+include("../scripts/functions.php");
+session_destroy();
+header("location:../");
 
-echo"<script>
-    window.location.href='login';
-</script>";
-
- ?>
+?>
